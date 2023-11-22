@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'Advanced Forms')
+@section('title', 'Edit User')
 
 @push('style')
     <!-- CSS Libraries -->
@@ -16,7 +16,7 @@
     <div class="main-content">
         <section class="section">
             <div class="section-header">
-                <h1>Users</h1>
+                <h1>Advanced Forms</h1>
                 <div class="section-header-breadcrumb">
                     <div class="breadcrumb-item active"><a href="#">Dashboard</a></div>
                     <div class="breadcrumb-item"><a href="#">Forms</a></div>
@@ -26,14 +26,13 @@
 
             <div class="section-body">
                 <h2 class="section-title">Users</h2>
-                <p class="section-lead">We provide advanced input fields, such as date picker, color picker, and so on.</p>
 
 
 
                 <div class="card">
-                    <form action="{{ route('users.store') }}" method="POST">
+                    <form action="{{ route('users.update', $user) }}" method="POST">
                         @csrf
-
+                        @method('PUT')
                         <div class="card-header">
                             <h4>Input Text</h4>
                         </div>
@@ -42,31 +41,28 @@
                                 <label>Name</label>
                                 <input type="text"
                                     class="form-control @error('name')
-                            is-invalid
+                                is-invalid
                             @enderror"
-                                    name="name">
+                                    name="name" value="{{ $user->name }}">
                                 @error('name')
                                     <div class="invalid-feedback">
                                         {{ $message }}
-
                                     </div>
                                 @enderror
                             </div>
                             <div class="form-group">
                                 <label>Email</label>
-                                <input type="text"
+                                <input type="email"
                                     class="form-control @error('email')
-                            is-invalid
+                                is-invalid
                             @enderror"
-                                    name="email">
+                                    name="email" value="{{ $user->email }}">
                                 @error('email')
                                     <div class="invalid-feedback">
                                         {{ $message }}
-
                                     </div>
                                 @enderror
                             </div>
-
                             <div class="form-group">
                                 <label>Password</label>
                                 <div class="input-group">
@@ -75,63 +71,54 @@
                                             <i class="fas fa-lock"></i>
                                         </div>
                                     </div>
-                                    <input id="password" type="password"
-                                        class="form-control pwstrength @error('password') is-invalid
-                                @enderror"
-                                        data-indicator="pwindicator" name="password">
-                                    @error('password')
-                                        <div class="invalid-feedback">
-                                            {{ $message }}
-                                        </div>
-                                    @enderror
+                                    <input type="password"
+                                        class="form-control @error('password')
+                                is-invalid
+                            @enderror"
+                                        name="password">
                                 </div>
+                                @error('password')
+                                    <div class="invalid-feedback">
+                                        {{ $message }}
+                                    </div>
+                                @enderror
                             </div>
                             <div class="form-group">
                                 <label>Phone</label>
-                                <input type="number" class="form-control" name="phone">
+                                <input type="number" class="form-control" name="phone" value="{{ $user->phone }}">
                             </div>
                             <div class="form-group">
                                 <label class="form-label">Roles</label>
                                 <div class="selectgroup w-100">
                                     <label class="selectgroup-item">
                                         <input type="radio" name="roles" value="ADMIN" class="selectgroup-input"
-                                            checked="">
+                                            @if ($user->roles == 'ADMIN') checked @endif>
                                         <span class="selectgroup-button">Admin</span>
                                     </label>
                                     <label class="selectgroup-item">
-                                        <input type="radio" name="roles" value="STAFF" class="selectgroup-input">
+                                        <input type="radio" name="roles" value="STAFF" class="selectgroup-input"
+                                            @if ($user->roles == 'STAFF') checked @endif>
                                         <span class="selectgroup-button">Staff</span>
                                     </label>
                                     <label class="selectgroup-item">
-                                        <input type="radio" name="roles" value="USER" class="selectgroup-input">
-                                        <span class="selectgroup-button">user</span>
+                                        <input type="radio" name="roles" value="USER" class="selectgroup-input"
+                                            @if ($user->roles == 'USER') checked @endif>
+                                        <span class="selectgroup-button">User</span>
                                     </label>
+
                                 </div>
                             </div>
-
-
-                            <div class="card-footer text-right">
-                                <button class="btn btn-primary">Submit</button>
-                            </div>
+                        </div>
+                        <div class="card-footer text-right">
+                            <button class="btn btn-primary">Submit</button>
                         </div>
                     </form>
-
                 </div>
+
+            </div>
         </section>
     </div>
 @endsection
 
 @push('scripts')
-    <!-- JS Libraies -->
-    <script src="{{ asset('library/cleave.js/dist/cleave.min.js') }}"></script>
-    <script src="{{ asset('library/cleave.js/dist/addons/cleave-phone.us.js') }}"></script>
-    <script src="{{ asset('library/bootstrap-daterangepicker/daterangepicker.js') }}"></script>
-    <script src="{{ asset('library/bootstrap-colorpicker/dist/js/bootstrap-colorpicker.min.js') }}"></script>
-    <script src="{{ asset('library/bootstrap-timepicker/js/bootstrap-timepicker.min.js') }}"></script>
-    <script src="{{ asset('library/bootstrap-tagsinput/dist/bootstrap-tagsinput.min.js') }}"></script>
-    <script src="{{ asset('library/select2/dist/js/select2.full.min.js') }}"></script>
-    <script src="{{ asset('library/selectric/public/jquery.selectric.min.js') }}"></script>
-
-    <!-- Page Specific JS File -->
-    <script src="{{ asset('js/page/forms-advanced-forms.js') }}"></script>
 @endpush

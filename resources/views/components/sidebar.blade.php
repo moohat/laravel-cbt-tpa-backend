@@ -28,6 +28,15 @@
 
                 </ul>
             </li>
+            <li class="nav-item dropdown">
+                <a href="#" class="nav-link has-dropdown"><i class="fas fa-fire"></i><span>Bank Soal</span></a>
+                <ul class="dropdown-menu">
+                    <li class='{{ Request::is('dashboard-general-dashboard') ? 'active' : '' }}'>
+                        <a class="nav-link" href="{{ route('soal.index') }}">All Soal</a>
+                    </li>
+
+                </ul>
+            </li>
         </ul>
 
 
