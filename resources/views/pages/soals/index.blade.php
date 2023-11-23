@@ -11,7 +11,7 @@
     <div class="main-content">
         <section class="section">
             <div class="section-header">
-                <h1>Bank Soal</h1>
+                <h1>Bank Soal - Tugas 2 M Taufik Hidayat</h1>
                 <div class="section-header-button">
                     <a href="{{ route('soal.create') }}" class="btn btn-primary">Add New</a>
                 </div>
@@ -51,7 +51,8 @@
                                 <div class="float-right">
                                     <form method="GET" action="{{ route('soal.index') }}">
                                         <div class="input-group">
-                                            <input type="text" class="form-control" placeholder="Search" name="name">
+                                            <input type="text" class="form-control" placeholder="Search"
+                                                name="pertanyaan">
                                             <div class="input-group-append">
                                                 <button class="btn btn-primary"><i class="fas fa-search"></i></button>
                                             </div>
@@ -64,35 +65,38 @@
                                 <div class="table-responsive">
                                     <table class="table-striped table">
                                         <tr>
-                                            <th>id</th>
+                                            <th>Nomor</th>
                                             <th>Soal</th>
                                             <th>Kategori</th>
                                             <th>Jawaban A</th>
                                             <th>Jawaban B</th>
                                             <th>Jawaban C</th>
                                             <th>Jawaban D</th>
+                                            <th>Kunci</th>
+                                            <th>Action</th>
                                         </tr>
-                                        @foreach ($soals as $soal)
+                                        @foreach ($soals as $key => $soal)
                                             <tr>
 
 
-                                                <td> {{ $soal->id }} </td>
+                                                <td> {{ $key + 1 }} </td>
                                                 <td> {{ $soal->pertanyaan }} </td>
                                                 <td> {{ $soal->kategori }} </td>
                                                 <td> {{ $soal->jawaban_a }} </td>
                                                 <td> {{ $soal->jawaban_b }} </td>
                                                 <td> {{ $soal->jawaban_c }} </td>
                                                 <td> {{ $soal->jawaban_d }} </td>
+                                                <td> {{ Str::upper($soal->kunci) }} </td>
                                                 <td>
-                                                    {{-- <div class="d-flex justify-content-center">
-                                                        <a href='{{ route('users.edit', $user->id) }}'
+                                                    <div class="d-flex justify-content-center">
+                                                        <a href='{{ route('soal.edit', $soal->id) }}'
                                                             class="btn btn-sm btn-info btn-icon">
                                                             <i class="fas fa-edit"></i>
                                                             Edit
                                                         </a>
 
-                                                        <form action="{{ route('users.destroy', $user->id) }}" method="POST"
-                                                            class="ml-2">
+                                                        <form action="{{ route('soal.destroy', $soal->id) }}"
+                                                            method="POST" class="ml-2">
                                                             <input type="hidden" name="_method" value="DELETE" />
                                                             <input type="hidden" name="_token"
                                                                 value="{{ csrf_token() }}" />
@@ -100,7 +104,7 @@
                                                                 <i class="fas fa-times"></i> Delete
                                                             </button>
                                                         </form>
-                                                    </div> --}}
+                                                    </div>
                                                 </td>
                                             </tr>
                                         @endforeach
