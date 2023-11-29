@@ -7,6 +7,7 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use App\Http\Resources\UserResource;
+use Carbon\Carbon;
 
 class AuthController extends Controller
 {
@@ -47,7 +48,6 @@ class AuthController extends Controller
 
         if (!$user || !Hash::check($loginData['password'], $user->password)) {
             return response()->json(['message' => 'Invalid credentials'], 401);
-            // abort(401, 'Invalid Credential');
         }
         $token = $user->createToken('auth_token')->plainTextToken;
 
@@ -55,5 +55,21 @@ class AuthController extends Controller
             'access_token' => $token,
             'user' => UserResource::make($user),
         ]);
+    }
+
+    public function logout(Request $request)
+    {
+        $user = $request->user();
+        $user->currentAccessToken()->delete();
+
+        // Kembalikan respons JSON
+        return response()->json(
+            [
+                'message' => 'Berhasil logout',
+                'user_name' => $user->name,
+                'logout_at' => Carbon::now(),
+            ],
+            200,
+        );
     }
 }
