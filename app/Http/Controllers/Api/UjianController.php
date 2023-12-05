@@ -54,17 +54,18 @@ class UjianController extends Controller
     //create ujian
     public function createUjian(Request $request)
     {
-        // get 20 soal angka random
+        // get 20 soal angka random unique
+
         $soalAngka = Soal::where('kategori', 'Numeric')
             ->inRandomOrder()
             ->limit(20)
             ->get();
-        //get 20 soang verbal random
+        //get 20 soal verbal random
         $soalVerbal = Soal::where('kategori', 'Verbal')
             ->inRandomOrder()
             ->limit(20)
             ->get();
-        //get 20 soang Logika random
+        //get 20 soal Logika random
         $soalLogika = Soal::where('kategori', 'Logika')
             ->inRandomOrder()
             ->limit(20)
@@ -103,14 +104,16 @@ class UjianController extends Controller
     {
         $ujian = Ujian::where('user_id', $request->user()->id)->first();
         $ujianSoalList = UjianSoalList::where('ujian_id', $ujian->id)->get();
-        $ujianSoalListId = [];
-        // $ujianSoalListId = UjianSoalList::pluck('soal_id', $ujianSoalList);
+        // $ujianSoalListId = [];
+        $soalIds = UjianSoalList::pluck('soal_id');
 
-        foreach ($ujianSoalList as $soal) {
-            array_push($ujianSoalListId, $soal->soal_id);
-        }
+        // dd($soalIds);
 
-        $soal = Soal::whereIn('id', $ujianSoalListId)
+        // foreach ($ujianSoalList as $soal) {
+        //     array_push($ujianSoalListId, $soal->soal_id);
+        // }
+
+        $soal = Soal::whereIn('id', $soalIds)
             ->where('kategori', $request->kategori)
             ->get();
 
@@ -125,5 +128,39 @@ class UjianController extends Controller
                 'data' => SoalResource::collection($soal),
             ]);
         }
+    }
+
+    //jawab soal
+    public function jawabSoal(Request $request)
+    {
+        $validatedData = request()->validate([
+            'soal_id' => 'required',
+            'jawaban' => 'required',
+        ]);
+
+        $ujian = Ujian::where('user_id', $request->user()->id)->first();
+        $ujianSoalList = UjianSoalList::where('ujian_id', $ujian->id)
+            ->where('soal_id', $validatedData['soal_id'])
+            ->first();
+
+        $soal = Soal::where('id', $validatedData['soal_id'])->first();
+
+        //cek jawaban
+        if ($soal->kunci == $validatedData['jawaban']) {
+            $ujianSoalList->kebenaran = true;
+            $ujianSoalList->update([
+                'kebenaran' => true,
+            ]);
+        } else {
+            $ujianSoalList->kebenaran = false;
+            $ujianSoalList->update([
+                'kebenaran' => false,
+            ]);
+        }
+
+        return response()->json([
+            'message' => 'Berhasil simpan jawaban',
+            'jawaban' => $ujianSoalList->kebenaran,
+        ]);
     }
 }
